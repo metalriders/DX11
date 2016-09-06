@@ -1,29 +1,21 @@
-////////////////////////////////////////////////////////////////////////////////
-// Filename: graphicsclass.cpp
-////////////////////////////////////////////////////////////////////////////////
 #include "graphicsclass.h"
-
 
 GraphicsClass::GraphicsClass()
 {
 	m_Direct3D = 0;
 }
 
-
 GraphicsClass::GraphicsClass(const GraphicsClass& other)
 {
 }
-
 
 GraphicsClass::~GraphicsClass()
 {
 }
 
-
 bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 {
 	bool result;
-
 
 	// Create the Direct3D object.
 	m_Direct3D = new D3DClass;
@@ -33,7 +25,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Initialize the Direct3D object.
-	result = m_Direct3D->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR);
+	result = m_Direct3D->Initialize(screenWidth, screenHeight, !VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR);
 	if(!result)
 	{
 		MessageBox(hwnd, L"Could not initialize Direct3D.", L"Error", MB_OK);
@@ -43,6 +35,11 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	return true;
 }
 
+bool GraphicsClass::UpdateGFX(unsigned char gfx[])
+{
+	m_gfx = gfx;
+	return (m_gfx == NULL);
+}
 
 void GraphicsClass::Shutdown()
 {
@@ -57,11 +54,9 @@ void GraphicsClass::Shutdown()
 	return;
 }
 
-
 bool GraphicsClass::Frame()
 {
 	bool result;
-
 
 	// Render the graphics scene.
 	result = Render();
@@ -72,7 +67,6 @@ bool GraphicsClass::Frame()
 
 	return true;
 }
-
 
 bool GraphicsClass::Render()
 {

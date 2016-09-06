@@ -37,6 +37,7 @@ public:
 	~chip8();
 	void init();
 	void emulateCycle();
+	void debugRender();
 	bool loadApplication(const char * filename);
 };
 

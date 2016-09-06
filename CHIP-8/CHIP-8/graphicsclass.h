@@ -1,28 +1,15 @@
-////////////////////////////////////////////////////////////////////////////////
-// Filename: graphicsclass.h
-////////////////////////////////////////////////////////////////////////////////
 #ifndef _GRAPHICSCLASS_H_
 #define _GRAPHICSCLASS_H_
 
-
-///////////////////////
-// MY CLASS INCLUDES //
-///////////////////////
 #include "d3dclass.h"
 
-
-/////////////
-// GLOBALS //
-/////////////
+// GLOBALS 
 const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;
 const float SCREEN_DEPTH = 1000.0f;
 const float SCREEN_NEAR = 0.1f;
 
-
-////////////////////////////////////////////////////////////////////////////////
-// Class name: GraphicsClass
-////////////////////////////////////////////////////////////////////////////////
+// DEFINITION
 class GraphicsClass
 {
 public:
@@ -31,6 +18,7 @@ public:
 	~GraphicsClass();
 
 	bool Initialize(int, int, HWND);
+	bool UpdateGFX(unsigned char gfx[]);
 	void Shutdown();
 	bool Frame();
 
@@ -38,6 +26,8 @@ private:
 	bool Render();
 
 private:
+	// Graphics pointer
+	unsigned char *m_gfx;
 	D3DClass* m_Direct3D;
 };
 

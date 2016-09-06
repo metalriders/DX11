@@ -381,7 +381,6 @@ void chip8::emulateCycle()
 	}
 }
 
-
 void chip8::debugRender()
 {
 	// Draw
@@ -405,8 +404,10 @@ bool chip8::loadApplication(const char * filename)
 	printf("Loading: %s\n", filename);
 
 	// Open file
-	FILE * pFile = fopen(filename, "rb");
-	if (pFile == NULL)
+	FILE * pFile = 0;
+	errno_t fe = fopen_s(&pFile,filename, "rb");
+
+	if (fe != 0)
 	{
 		fputs("File error", stderr);
 		return false;

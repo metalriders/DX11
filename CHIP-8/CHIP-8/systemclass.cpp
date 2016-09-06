@@ -30,6 +30,13 @@ bool SystemClass::Initialize()
 	// Initialize the width and height of the screen to zero before sending the variables into the function.
 	screenWidth = 0;
 	screenHeight = 0;
+	
+	// Create the input object.  This object will be used to handle reading the keyboard input from the user.
+	m_cpu = new chip8;
+	if (!m_cpu)
+	{
+		return false;
+	}
 
 	// Initialize the windows api.
 	InitializeWindows(screenWidth, screenHeight);
@@ -79,6 +86,13 @@ void SystemClass::Shutdown()
 		m_Input = 0;
 	}
 
+	// Release the cpu object.
+	if (m_cpu)
+	{
+		delete m_cpu;
+		m_cpu = 0;
+	}
+
 	// Shutdown the window.
 	ShutdownWindows();
 	
@@ -91,6 +105,8 @@ void SystemClass::Run()
 	MSG msg;
 	bool done, result;
 
+	// Load game
+	m_cpu->loadApplication("pong2");
 
 	// Initialize the message structure.
 	ZeroMemory(&msg, sizeof(MSG));
@@ -120,34 +136,34 @@ void SystemClass::Run()
 				done = true;
 			}
 		}
-
 	}
 
 	return;
 }
 
-
 bool SystemClass::Frame()
 {
 	bool result;
 
-
 	// Check if the user pressed escape and wants to exit the application.
-	if(m_Input->IsKeyDown(VK_ESCAPE))
+	if (m_Input->IsKeyDown(VK_ESCAPE))
 	{
 		return false;
 	}
 
+	// Update graphics or just sync the graphics once by getting pointer to gfx from cpu instance?
+	m_Graphics->UpdateGFX(m_cpu->gfx);
+
 	// Do the frame processing for the graphics object.
 	result = m_Graphics->Frame();
-	if(!result)
+	if (!result)
 	{
 		return false;
 	}
 
 	return true;
+	return false;
 }
-
 
 LRESULT CALLBACK SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
 {
@@ -183,8 +199,7 @@ void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
 	WNDCLASSEX wc;
 	DEVMODE dmScreenSettings;
 	int posX, posY;
-
-
+	
 	// Get an external pointer to this object.	
 	ApplicationHandle = this;
 
