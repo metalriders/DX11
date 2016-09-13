@@ -4,7 +4,6 @@
 */
 #include "system.h"
 
-// Main for windows
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdshow) 
 {
 	System* system = new System;
