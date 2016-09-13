@@ -156,7 +156,11 @@
     <ClInclude Include="d3d.h" />
     <ClInclude Include="graphics.h" />
     <ClInclude Include="input.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="system.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Color.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
