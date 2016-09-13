@@ -1,4 +1,4 @@
-#pragma once
+/* Class that creates an object with all things necesary to play with DirectX */
 
 #ifndef _D3D_H_
 #define _D3D_H_
@@ -20,10 +20,10 @@ public:
 	D3D(const D3D&);
 	~D3D();
 
-	bool Initialize(int, int, bool, HWND, bool, float, float);
+	bool Initialize(int screenWidth, int screeenHeight, bool vsync, HWND hwnd, bool fullscreen, float, float);
 	void Shutdown();
 
-	void BeginScene(float, float, float, float);
+	void BeginScene(float r, float g, float b, float a);
 	void EndScene();
 
 	ID3D11Device* GetDevice();
@@ -52,4 +52,4 @@ private:
 	D3DXMATRIX m_orthoMatrix;
 };
 
-#endif
+#endif //! _D3D_H_

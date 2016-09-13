@@ -35,9 +35,10 @@ bool Graphics::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	return true;
 }
 
+// Release the D3d object.
 void Graphics::Shutdown()
 {
-	// Release the D3d object.
+
 	if (m_D3D)
 	{
 		m_D3D->Shutdown();
@@ -48,12 +49,7 @@ void Graphics::Shutdown()
 
 bool Graphics::Frame()
 {
-	bool result;
-
-
-	// Render the graphics scene.
-	result = Render();
-	if (!result)
+	if (!Render())
 	{
 		return false;
 	}
@@ -63,10 +59,7 @@ bool Graphics::Frame()
 
 bool Graphics::Render()
 {
-	// Clear the buffers to begin the scene.
 	m_D3D->BeginScene(0.5f, 0.5f, 0.5f, 1.0f);
-
-	// Present the rendered scene to the screen.
 	m_D3D->EndScene();
 
 	return true;

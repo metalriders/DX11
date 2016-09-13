@@ -1,4 +1,4 @@
-#pragma once
+/* This class has a D3D object that uses to do rendering of the scene */
 
 #ifndef _GRAPHICS_H_
 #define _GRAPHICS_H_
@@ -24,7 +24,8 @@ public:
 private:
 	bool Render();
 	
-	D3D* m_D3D;
+	// should it be a smart pointer?
+	D3D* m_D3D;		
 };
 
-#endif
+#endif //! _GRAPHICS_H_

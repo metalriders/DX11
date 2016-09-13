@@ -1,4 +1,4 @@
-#pragma once
+/* Class to handle inputs */
 
 #ifndef _INPUT_H_
 #define _INPUT_H_
@@ -21,4 +21,4 @@ private:
 	bool m_keys[256];
 };
 
-#endif
+#endif //! _INPUT_H_

@@ -1,4 +1,7 @@
-#pragma once
+/*  This is our little system to connect the other modules used in this tutorial.
+	It's going to be instanciated once and will be doing the run/shutdown of our DX program.
+*/
+
 #ifndef _SYSTEM_H_
 #define _SYSTEM_H_
 
@@ -34,7 +37,6 @@ private:
 	Input* m_Input;
 	Graphics* m_Graphics;
 };
-
 
 static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 static System *ApplicationHandle;

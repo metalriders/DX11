@@ -14,38 +14,33 @@ System::~System()
 {
 }
 
+// Set up our environment, initializing Windows, Graphics and Inputs
 bool System::Initialize()
 {
 	int screenWidth, screenHeight;
-	bool result;
 
-	// Initialize the width and height of the screen to zero before sending the variables into the function.
 	screenWidth = 0;
 	screenHeight = 0;
 
 	// Initialize the windows api.
 	InitializeWindows(screenWidth, screenHeight);
 
-	// Create the input object.  This object will be used to handle reading the keyboard input from the user.
+	// This object will be used to handle reading the keyboard input from the user.
 	m_Input = new Input;
 	if (!m_Input)
 	{
 		return false;
 	}
-
-	// Initialize the input object.
 	m_Input->Initialize();
 
-	// Create the graphics object.  This object will handle rendering all the graphics for this application.
+	// This object will handle rendering all the graphics for this application.
 	m_Graphics = new Graphics;
 	if (!m_Graphics)
 	{
 		return false;
 	}
 
-	// Initialize the graphics object.
-	result = m_Graphics->Initialize(screenWidth, screenHeight, m_hwnd);
-	if (!result)
+	if (!m_Graphics->Initialize(screenWidth, screenHeight, m_hwnd))
 	{
 		return false;
 	}
@@ -76,11 +71,11 @@ void System::Shutdown()
 	return;
 }
 
+// Function that will be running until user pressed ESC key
 void System::Run()
 {
 	MSG msg;
-	bool done, result;
-
+	bool done;
 
 	// Initialize the message structure.
 	ZeroMemory(&msg, sizeof(MSG));
@@ -104,21 +99,17 @@ void System::Run()
 		else
 		{
 			// Otherwise do the frame processing.
-			result = Frame();
-			if (!result)
+			if (!Frame())
 			{
 				done = true;
 			}
 		}
 	}
-
 	return;
 }
 
 bool System::Frame()
 {
-	bool result;
-
 	// Check if the user pressed escape and wants to exit the application.
 	if (m_Input->IsKeyDown(VK_ESCAPE))
 	{
@@ -126,8 +117,7 @@ bool System::Frame()
 	}
 
 	// Do the frame processing for the graphics object.
-	result = m_Graphics->Frame();
-	if (!result)
+	if (!m_Graphics->Frame())
 	{
 		return false;
 	}
@@ -135,33 +125,6 @@ bool System::Frame()
 	return true;
 }
 
-LRESULT CALLBACK System::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
-{
-	switch (umsg)
-	{
-		// Check if a key has been pressed on the keyboard.
-	case WM_KEYDOWN:
-	{
-		// If a key is pressed send it to the input object so it can record that state.
-		m_Input->KeyDown((unsigned int)wparam);
-		return 0;
-	}
-
-	// Check if a key has been released on the keyboard.
-	case WM_KEYUP:
-	{
-		// If a key is released then send it to the input object so it can unset the state for that key.
-		m_Input->KeyUp((unsigned int)wparam);
-		return 0;
-	}
-
-	// Any other messages send to the default message handler as our application won't make use of them.
-	default:
-	{
-		return DefWindowProc(hwnd, umsg, wparam, lparam);
-	}
-	}
-}
 
 void System::InitializeWindows(int& screenWidth, int& screenHeight)
 {
@@ -169,14 +132,12 @@ void System::InitializeWindows(int& screenWidth, int& screenHeight)
 	DEVMODE dmScreenSettings;
 	int posX, posY;
 
-
 	// Get an external pointer to this object.	
 	ApplicationHandle = this;
 
 	// Get the instance of this application.
 	m_hinstance = GetModuleHandle(NULL);
 
-	// Give the application a name.
 	m_applicationName = L"Engine";
 
 	// Setup the windows class with default settings.
@@ -200,10 +161,10 @@ void System::InitializeWindows(int& screenWidth, int& screenHeight)
 	screenWidth = GetSystemMetrics(SM_CXSCREEN);
 	screenHeight = GetSystemMetrics(SM_CYSCREEN);
 
-	// Setup the screen settings depending on whether it is running in full screen or in windowed mode.
+	// Setup the screen settings
 	if (FULL_SCREEN)
 	{
-		// If full screen set the screen to maximum size of the users desktop and 32bit.
+		//Set the screen to maximum size of the users desktop and 32bit.
 		memset(&dmScreenSettings, 0, sizeof(dmScreenSettings));
 		dmScreenSettings.dmSize = sizeof(dmScreenSettings);
 		dmScreenSettings.dmPelsWidth = (unsigned long)screenWidth;
@@ -211,7 +172,6 @@ void System::InitializeWindows(int& screenWidth, int& screenHeight)
 		dmScreenSettings.dmBitsPerPel = 32;
 		dmScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
 
-		// Change the display settings to full screen.
 		ChangeDisplaySettings(&dmScreenSettings, CDS_FULLSCREEN);
 
 		// Set the position of the window to the top left corner.
@@ -219,7 +179,6 @@ void System::InitializeWindows(int& screenWidth, int& screenHeight)
 	}
 	else
 	{
-		// If windowed then set it to 800x600 resolution.
 		screenWidth = 800;
 		screenHeight = 600;
 
@@ -238,7 +197,6 @@ void System::InitializeWindows(int& screenWidth, int& screenHeight)
 	SetForegroundWindow(m_hwnd);
 	SetFocus(m_hwnd);
 
-	// Hide the mouse cursor.
 	ShowCursor(false);
 
 	return;
@@ -269,28 +227,61 @@ void System::ShutdownWindows()
 	return;
 }
 
+
+/* CALLBACKS */
+
+// System message handler
+LRESULT CALLBACK System::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
+{
+	switch (umsg)
+	{
+		// Check if a key has been pressed on the keyboard.
+	case WM_KEYDOWN:
+	{
+		// If a key is pressed send it to the input object so it can record that state.
+		m_Input->KeyDown((unsigned int)wparam);
+		return 0;
+	}
+
+	// Check if a key has been released on the keyboard.
+	case WM_KEYUP:
+	{
+		// If a key is released then send it to the input object so it can unset the state for that key.
+		m_Input->KeyUp((unsigned int)wparam);
+		return 0;
+	}
+
+	// Any other messages send to the default message handler as our application won't make use of them.
+	default:
+	{
+		return DefWindowProc(hwnd, umsg, wparam, lparam);
+	}
+	}
+}
+
+// Window message handler
 LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 {
 	switch (umessage)
 	{
 		// Check if the window is being destroyed.
-	case WM_DESTROY:
-	{
-		PostQuitMessage(0);
-		return 0;
-	}
+		case WM_DESTROY:
+		{
+			PostQuitMessage(0);
+			return 0;
+		}
 
-	// Check if the window is being closed.
-	case WM_CLOSE:
-	{
-		PostQuitMessage(0);
-		return 0;
-	}
+		// Check if the window is being closed.
+		case WM_CLOSE:
+		{
+			PostQuitMessage(0);
+			return 0;
+		}
 
-	// All other messages pass to the message handler in the system class.
-	default:
-	{
-		return ApplicationHandle->MessageHandler(hwnd, umessage, wparam, lparam);
-	}
+		// All other messages pass to the message handler in the system class.
+		default:
+		{
+			return ApplicationHandle->MessageHandler(hwnd, umessage, wparam, lparam);
+		}
 	}
 }
