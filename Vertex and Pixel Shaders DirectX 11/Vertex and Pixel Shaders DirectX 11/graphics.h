@@ -4,6 +4,9 @@
 #define _GRAPHICS_H_
 
 #include "d3d.h"
+#include "camera.h"
+#include "model.h"
+#include "colorshader.h"
 
 const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;
@@ -24,8 +27,11 @@ public:
 private:
 	bool Render();
 	
-	// should it be a smart pointer?
-	D3D* m_D3D;		
+	// should we use smart pointers?
+	D3D* m_D3D;	
+	Camera* m_Camera;
+	Model* m_Model;
+	Colorshader* m_ColorShader;
 };
 
 #endif //! _GRAPHICS_H_
