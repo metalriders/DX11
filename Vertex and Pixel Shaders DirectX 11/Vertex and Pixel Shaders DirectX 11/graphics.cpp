@@ -42,7 +42,7 @@ bool Graphics::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 	// Set the initial position of the camera.
-	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
+	m_Camera->SetPosition(0.0f, 0.0f, -5.0f);
 
 	// Create the model object.
 	m_Model = new Model;
@@ -120,7 +120,7 @@ bool Graphics::Render()
 	bool result;
 
 	// Clear buffers
-	m_D3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
+	m_D3D->BeginScene(1.0f, 1.0f, 1.0f, 0.5f);
 
 	// Generate the view matrix base on the camera's position.
 	m_Camera->Render();

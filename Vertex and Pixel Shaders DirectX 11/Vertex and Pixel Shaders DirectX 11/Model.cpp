@@ -52,8 +52,8 @@ bool Model::InitializeBuffers(ID3D11Device * device)
 	HRESULT result;
 
 	// Set number of vertices and indices in respective array.
-	m_vertexCount = 3;
-	m_indexCount = 3;
+	m_vertexCount = 4;
+	m_indexCount = 4;
 
 	//Create vertex array
 	vertices = new VertexType[m_vertexCount];
@@ -74,19 +74,23 @@ bool Model::InitializeBuffers(ID3D11Device * device)
 
 	//Load vertex array with data
 	vertices[0].position = D3DXVECTOR3(-1.0f, -1.0f, 0.0f);	// Bottom left.
-	vertices[0].color = D3DXVECTOR4(0.0f, 1.0f, 0.0f, 1.0f);
+	vertices[0].color = D3DXVECTOR4(1.0f, 1.0f, 0.0f, 1.0f);
 	
-	vertices[1].position = D3DXVECTOR3(0.0f, 1.0f, 0.0f);	// Top middle.
+	vertices[1].position = D3DXVECTOR3(-1.0f, 1.0f, 0.0f);	// Top left.
 	vertices[1].color = D3DXVECTOR4(0.0f, 1.0f, 0.0f, 1.0f);
 
 	vertices[2].position = D3DXVECTOR3(1.0f, -1.0f, 0.0f);	// Bottom right.
-	vertices[2].color = D3DXVECTOR4(0.0f, 1.0f, 0.0f, 1.0f);
+	vertices[2].color = D3DXVECTOR4(0.0f, 0.0f, 1.0f, 1.0f);
+
+	vertices[3].position = D3DXVECTOR3(1.0f, 1.0f, 0.0f);	// Top right.
+	vertices[3].color = D3DXVECTOR4(1.0f, 0.0f, 0.0f, 1.0f);
+
 
 	//Load index array with data
 	indices[0] = 0; // Bottom left.
-	indices[1] = 1; // Top middle.
-	indices[2] = 2; // Bottom right.
-
+	indices[1] = 1; // Top left.
+	indices[2] = 2; // Top right.
+	indices[3] = 3; // Bottom right.
 
 	//Set up the description of the static vertex buffer
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -170,7 +174,7 @@ void Model::RenderBuffers(ID3D11DeviceContext * deviceContext)
 	deviceContext->IASetIndexBuffer(m_indexBufer, DXGI_FORMAT_R32_UINT, 0);
 
 	//Set the type of primitive that should be rendered from this vertex, in this case triangles.
-	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 	
 	return;
 }
